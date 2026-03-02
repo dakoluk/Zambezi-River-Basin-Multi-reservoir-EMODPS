@@ -914,3 +914,4 @@ class irr_function_parameters:
         self.num_irr = int()
         self.mParam = np.empty(0)
         self.MParam = np.empty(0)
+#print("ReservoirSim module imported")
