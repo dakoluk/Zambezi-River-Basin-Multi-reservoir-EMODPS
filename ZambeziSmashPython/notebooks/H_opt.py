@@ -17,9 +17,6 @@ from ema_workbench.em_framework.optimization import (GenerationalBorg, epsilon_n
 
 # Because everything outside the main statement runs 8 times due to Multiprocessing evaluator, we first check cwd
 
-import os
-import sys
-
 # Dynamically add the root directory of the project to sys.path
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 src_path = os.path.join(project_root, "ZambeziSmashPython/src")
@@ -155,6 +152,10 @@ if __name__ == '__main__':
                 epsilons=epsilon_list,
                 convergence=convergence_metrics,
             )
+            
+            # Count the number of function evaluations
+            nfe_count = convergence.nfe
+            print(f"Total number of function evaluations: {nfe_count}")
 
             # Print some information
             print("results type", type(results))
