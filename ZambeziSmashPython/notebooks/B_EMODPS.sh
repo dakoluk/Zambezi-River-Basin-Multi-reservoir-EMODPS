@@ -8,14 +8,14 @@
 #SBATCH --account=research-TPM-MAS
 
 
-module load 2022r2
 module load 2023r1
 module load python/3.8.12
 
 module load py-numpy/1.22.4
 module load py-scipy
 module load py-matplotlib
-module load py-pip/22.2.2
+module load py-pip/21.1.2
+
 
 pip install pandas
 pip install ema-workbench

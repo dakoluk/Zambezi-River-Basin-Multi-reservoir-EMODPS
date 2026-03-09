@@ -19,16 +19,25 @@ from ema_workbench.em_framework.optimization import (GenerationalBorg, epsilon_n
 # SpacingMetric,)
 
 # Because everything outside the main statement runs 8 times due to Multiprocessing evaluator, we first check cwd
-if not os.path.exists("../src"):
-    os.chdir("../../src")
+# Dynamically add the root directory of the project to sys.path
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+src_path = os.path.join(project_root, "ZambeziSmashPython/src")
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
+
+#print("Updated sys.path:", sys.path)
+
+# Ensure the script changes to the correct directory
+if os.path.exists(src_path):
+    os.chdir(src_path)
+    #print(f"Changed working directory to: {os.getcwd()}")
 else:
-    os.chdir('../src')
+    #print(f"Directory not found: {src_path}")
+    sys.exit(1)  # Exit the script if the directory does not exist
 
-sys.path.append("..")
-sys.path.append(".")
-
+# Store the initial working directory
 cwd_initial = os.getcwd()
-print("cwd line 26 is: ", cwd_initial)
+#print("Initial working directory:", cwd_initial)
 
 from model_zambezi_OPT_full import ModelZambezi
 
@@ -37,10 +46,10 @@ ZambeziProblem = ModelZambezi()
 
 def model_wrapper(**kwargs):
     input = [kwargs['v' + str(i)] for i in range(len(kwargs))]
-    Hydropower, Environment, Irrigation, Irrigation2, Irrigation3, Irrigation4, Irrigation5, Irrigation6, Irrigation7,\
+    Environment, Irrigation2, Irrigation3, Irrigation4, Irrigation5, Irrigation6, Irrigation7,\
         Irrigation8, Irrigation9, HydropowerITT, HydropowerKGU, HydropowerKA, HydropowerCB, HydropowerKGL = \
         tuple(ZambeziProblem.evaluate(np.array(input)))
-    return Hydropower, Environment, Irrigation, Irrigation2, Irrigation3, Irrigation4, Irrigation5, Irrigation6, \
+    return Environment, Irrigation2, Irrigation3, Irrigation4, Irrigation5, Irrigation6, \
         Irrigation7, Irrigation8, Irrigation9, HydropowerITT, HydropowerKGU, HydropowerKA, HydropowerCB, HydropowerKGL
 
 if __name__ == '__main__':
@@ -53,9 +62,9 @@ if __name__ == '__main__':
     model.levers = [RealParameter('v' + str(i), -1, 1) for i in range(ZambeziProblem.Nvar)]
 
     # specify outcomes
-    model.outcomes = [ScalarOutcome('Hydropower', ScalarOutcome.MINIMIZE),  # Minimize, because deficits
+    model.outcomes = [#ScalarOutcome('Hydropower', ScalarOutcome.MINIMIZE),  # Minimize, because deficits
                       ScalarOutcome('Environment', ScalarOutcome.MINIMIZE),
-                      ScalarOutcome('Irrigation', ScalarOutcome.MINIMIZE),
+                      #ScalarOutcome('Irrigation', ScalarOutcome.MINIMIZE),
                       ScalarOutcome('Irrigation2', ScalarOutcome.MINIMIZE),
                       ScalarOutcome('Irrigation3', ScalarOutcome.MINIMIZE),
                       ScalarOutcome('Irrigation4', ScalarOutcome.MINIMIZE),
@@ -81,9 +90,10 @@ if __name__ == '__main__':
     # Specify the nfe and add a comment for the run save name
     nfe = 1000000
     number_of_seeds = 1  # 5
-    epsilon_list = [0.9, 1, 0.9, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2,
+    epsilon_list = [1, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2,
                     1.2, 1, 1, 1, 1, 1]  # Test values: [0.9] * len(model.outcomes), after observing base case:
     # , previous version's epsilons: [0.1] * len(model.outcomes)
+    # epsilon_list = [0.9, 1, 0.9, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1, 1, 1, 1, 1] 
     seeds_list = [17, 42, 63, 188, 1234]
     run_comment = 'pseudo_mln_5th_seed'  # add a comment to recognize the run output
     ######################################################################################
@@ -167,8 +177,8 @@ if __name__ == '__main__':
             print("run name is", run_label)
 
             # Save the results of this seed
-            results_file_name = f"results_seed{i}.csv"
-            convergence_file_name = f"convergence{i}.csv"
+            results_file_name = f"HI_Dresults_seed{i}.csv"
+            convergence_file_name = f"HI_Dconvergence{i}.csv"
             print('results_file_name is', results_file_name)
 
             cwd = os.getcwd()
@@ -205,6 +215,6 @@ if __name__ == '__main__':
     print('merged_results', merged_results, 'saved to: ', os.getcwd())
 
     # Save the results
-    merged_results_name = 'merged_results.csv'
+    merged_results_name = 'HI_merged_results_dml.csv'
     merged_results.to_csv(os.path.join(cwd, merged_results_name), index=False)
 

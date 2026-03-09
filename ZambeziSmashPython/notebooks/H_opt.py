@@ -73,9 +73,9 @@ if __name__ == '__main__':
 
     # Specify the nfe and add a comment for the run save name
     nfe = 200000 #150000 1 seed; 200000 5 seeds in HPC
-    number_of_seeds = 5
+    number_of_seeds = 2 #5
     epsilon_list = [1, 0.9, 1.2, 1.2, 1.2, 1.2, 1.2] #epsilon_list = [0.9, 1, 0.9, 1.2, 1.2, 1.2, 1.2, 1.2]
-    seeds_list = [17, 42, 63, 188, 1234]
+    seeds_list = [17, 42] #[17, 42, 63, 188, 1234]
     run_comment = 'pseudo'  # add a comment to recognize the run output
 
     ######################################################################################
@@ -163,8 +163,8 @@ if __name__ == '__main__':
             print("run name is", run_label)
 
             # Save the results of this seed
-            results_file_name = f"Dresults_seed{i}.csv"
-            convergence_file_name = f"Dconvergence{i}.csv"
+            results_file_name = f"H_Dresults_seed{i}.csv"
+            convergence_file_name = f"H_Dconvergence{i}.csv"
             print('results_file_name is', results_file_name)
 
             cwd = os.getcwd()
@@ -201,6 +201,6 @@ if __name__ == '__main__':
     print('merged_results', merged_results, 'saved to: ', os.getcwd())
 
     # Save the results
-    merged_results_name = 'merged_results_dml.csv'
+    merged_results_name = 'H_merged_results_dml.csv'
     merged_results.to_csv(os.path.join(cwd, merged_results_name), index=False)
 

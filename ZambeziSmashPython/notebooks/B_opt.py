@@ -15,17 +15,25 @@ from ema_workbench.em_framework.optimization import (GenerationalBorg, epsilon_n
 #from ema_workbench import (GenerationalDistanceMetric, EpsilonIndicatorMetric, InvertedGenerationalDistanceMetric,
                             #SpacingMetric,)
 
-# Because everything outside the main statement runs 8 times due to Multiprocessing evaluator, we first check cwd
-if not os.path.exists("../src"):
-    os.chdir("../../src")
+# Dynamically add the root directory of the project to sys.path
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+src_path = os.path.join(project_root, "ZambeziSmashPython/src")
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
+
+#print("Updated sys.path:", sys.path)
+
+# Ensure the script changes to the correct directory
+if os.path.exists(src_path):
+    os.chdir(src_path)
+    #print(f"Changed working directory to: {os.getcwd()}")
 else:
-    os.chdir('../src')
+    #print(f"Directory not found: {src_path}")
+    sys.exit(1)  # Exit the script if the directory does not exist
 
-sys.path.append("..")
-sys.path.append(".")
-
+# Store the initial working directory
 cwd_initial = os.getcwd()
-print("cwd line 26 is: ", cwd_initial)
+#print("Initial working directory:", cwd_initial)
 
 from model_zambezi_OPT import ModelZambezi
 
@@ -59,10 +67,10 @@ if __name__ == '__main__':
     ######################################################################################
 
     # Specify the nfe and add a comment for the run save name
-    nfe = 1000000 # 1 seed; 35000 5 seeds in HPC
-    number_of_seeds = 1 #5
+    nfe = 100000 # 1 seed; 35000 5 seeds in HPC
+    number_of_seeds = 2 #5
     epsilon_list = [0.2, 0.5, 0.3] # Test values: [0.9] * len(model.outcomes), after observing base case: [0.2, 0.5, 0.1], previous version's epsilons: [0.1] * len(model.outcomes)
-    seeds_list = [17, 42, 63, 188, 1234]
+    seeds_list = [17, 42]
     run_comment = 'pseudo_new_5th'  # add a comment to recognize the run output
 
     ######################################################################################
@@ -114,7 +122,7 @@ if __name__ == '__main__':
 
     with MultiprocessingEvaluator(model) as evaluator:
         for i in tqdm(range(number_of_seeds)):  # for every seed
-            s = seeds_list[4]
+            s = seeds_list[1]
             np.random.seed(int(s))
             random.seed(int(s))
             print("working directory within evaluator is", os.getcwd())
