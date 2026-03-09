@@ -297,7 +297,7 @@ class ModelZambezi:
         self.MEF_VictoriaFalls = utils.loadVector("../data/MEF_VictoriaFalls.txt", self.T)  # [m^3/sec]
 
         # Load Minimum Environmental Flow requirement in the Zambezi Delta for the months of February and March
-        self.qDelta = utils.loadVector("../data/MEF_Delta.txt", self.T)  # [m^3/sec]
+        self.qDelta = utils.loadVector("../data/MEF_Delta.txt", self.T)  # [m^3/sec] #7000 for feb and March
 
     def getNobj(self):  # the number of objectives is set in the settings_file (3 in 09.23)
         return self.Nobj

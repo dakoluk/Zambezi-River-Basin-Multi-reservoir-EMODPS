@@ -159,7 +159,7 @@ def irr_plot_quantities():
     plt.rcParams["font.family"] = "Myriad Pro"
     sns.set_style("whitegrid")
 
-    input_folder = '../storage_release/'
+    input_folder = '/Users/damlaakoluk/Zambezi-River-Basin-Multi-reservoir-EMODPS/ZambeziSmashPython/storage_release/irr_policy_simulation'
     # input_folder_objs='../for_plots/'
     target_input_folder = '../data/'
     output_folder = '../plots/'
